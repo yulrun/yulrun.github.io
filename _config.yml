@@ -2,6 +2,7 @@ title: YulRun:Dev
 description: 
 
 plugins:
+  - jekyll-default-layout
   - jekyll-remote-theme
 
 remote-theme: just-the-docs/just-the-docs
