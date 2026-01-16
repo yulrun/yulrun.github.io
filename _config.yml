@@ -5,6 +5,7 @@ plugins:
   - jekyll-default-layout
   - jekyll-remote-theme
 
-theme: just-the-docs
-remote-theme: https://github.com/just-the-docs/just-the-docs
+#theme: just-the-docs
+#remote-theme: https://github.com/just-the-docs/just-the-docs
+remote_theme: benbalter/retlab
 
