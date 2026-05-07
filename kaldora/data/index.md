@@ -4,7 +4,18 @@ parent: Kaldora
 nav_order: 2
 ---
 
-Exp Chart:
+**Skill Costing:**
+
+| Skill Tier | Unlock Cost | Upgrade (1/3) | Total to Max | Strategy / Context |
+|:-----------|:------------|:--------------|:-------------|:-------------------|
+| **Tier 1** | 1,500 | 500 | 3,000 | **Early game bottleneck.** Teaches the player that SP is a limited resource. |
+| **Tier 2** | 45,000 | 15,000 | 90,000 | **Specialization phase.** Players usually max 2-3 core skills here. |
+| **Tier 3** | 15,000,000 | 5,000,000 | 30,000,000 | **The Mid-game Wall.** Requires serious grinding in Lvl 30-40 zones. |
+| **Tier 4** | 80,000,000 | 25,000,000 | 155,000,000 | **Heroic choice.** An unlock here may prevent you from upgrading Tier 3s. |
+| **Tier 5** | 180,000,000 | 60,000,000 | 360,000,000 | **The Final Grind.** Reaching level 60 isn't enough; you must farm to master. |
+
+
+**Exp Chart:**
 
 | Tier | Level(s) | Total XP | Total SP | Est. Kills | Mob XP | Mob SP |
 |:-----|:---------|:---------|:---------|:-----------|:-------|:-------|
