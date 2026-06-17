@@ -172,6 +172,7 @@ func activate() -> bool:
 	# Finish the ability successfully
 	end_ability()
 	return true
+```
 
 ### Example 2: "Sprint" (Duration Buff)
 This ability costs stamina to activate, temporarily increases movement speed, and applies a "Sprinting" tag so other systems (like animations) know what state the player is in.
