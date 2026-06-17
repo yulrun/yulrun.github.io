@@ -1,6 +1,6 @@
 ---
 title: GodotGAS
-nav_order: 1
+nav_order: 3
 ---
 
 # Chapter 1: The Godot-Native Architecture
@@ -45,6 +45,7 @@ func pre_attribute_change(attribute_name: String, proposed_value: float) -> floa
 	if attribute_name == "health":
 		return clampf(proposed_value, 0.0, max_health.current_value)
 	return proposed_value
+```
 
 ### Chapter 3: Abilities & State
 # Chapter 3: Abilities & State Management
