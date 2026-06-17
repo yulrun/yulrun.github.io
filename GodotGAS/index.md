@@ -44,7 +44,7 @@ Before an attribute is changed, the ASC routes the new value through `pre_attrib
 func pre_attribute_change(attribute_name: String, proposed_value: float) -> float:
 	if attribute_name == "health":
 		return clampf(proposed_value, 0.0, max_health.current_value)
-	return proposed_value```
+	return proposed_value
 
 ### Chapter 3: Abilities & State
 # Chapter 3: Abilities & State Management
