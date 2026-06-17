@@ -111,3 +111,163 @@ A Quality-of-Life wrapper that allows developers to map Godot's native Input Map
 
 ##Looking Beyond: Multiplayer (v2.0)
 Multiplayer Prediction and Rollback algorithms require deeply modifying how state is stored frame-by-frame. To ensure the single-player/co-op core remains lightning-fast and bug-free, highly competitive esports networking (Client Prediction) is intentionally deferred to GodotGAS v2.0.
+
+# Chapter 6: Ability Cookbook (Examples)
+
+This guide walks you through creating three standard types of abilities using the GodotGAS v0.5.0 framework: an **Instant Heal**, a **Duration Buff (Sprint)**, and a **Toggle Stance (Shield Wall)**.
+
+## Example 1: The "Minor Heal" (Instant Effect)
+This is a simple spell that costs Mana and instantly restores Health.
+
+**Step 1: Register Tags**
+Open the Gameplay Tag Editor in Godot and add:
+* `Ability.Magic.Heal`
+* `Cooldown.Heal`
+
+**Step 2: Create the Cost & Cooldown Effects**
+1. Create a new `GameplayEffect` resource named `GE_Heal_Cost.tres`.
+   * **Policy:** `INSTANT`
+   * **Modifiers:** Add 1 element.
+     * `Attribute Name`: "mana"
+     * `Operation`: `ADD`
+     * `Magnitude`: `-15.0` (Negative adds act as subtraction).
+2. Create `GE_Heal_Cooldown.tres`.
+   * **Policy:** `DURATION`
+   * **Duration:** `3.0`
+   * **Granted Tags:** Add `Cooldown.Heal`.
+
+**Step 3: Create the Heal Effect**
+1. Create `GE_Heal_Execution.tres`.
+   * **Policy:** `INSTANT`
+   * **Modifiers:** Add 1 element.
+     * `Attribute Name`: "health"
+     * `Operation`: `ADD`
+     * `Magnitude`: `25.0`
+
+**Step 4: Create the Ability Script**
+Create a new script `GA_Heal.gd` extending `GameplayAbility`:
+
+```gdscript
+class_name GA_Heal
+extends GameplayAbility
+
+@export var heal_effect: GameplayEffect
+
+func _init() -> void:
+	ability_tag = "Ability.Magic.Heal"
+	# Block activation if the spell is already on cooldown!
+	activation_blocked_tags = ["Cooldown.Heal"] 
+
+func activate() -> bool:
+	# Trigger a visual cue (handled by the GameplayCueManager Autoload)
+	execute_cue("Cue.Magic.Heal")
+	
+	# Apply the heal effect to ourselves
+	if heal_effect:
+		owner_asc.apply_gameplay_effect(heal_effect, owner_asc, ability_level)
+		
+	# Finish the ability successfully
+	end_ability()
+	return true
+
+### Example 2: "Sprint" (Duration Buff)
+This ability costs stamina to activate, temporarily increases movement speed, and applies a "Sprinting" tag so other systems (like animations) know what state the player is in.
+
+**Step 1: Register Tags**
+* `Ability.Agility.Sprint`
+* `Status.Buff.Sprinting`
+
+**Step 2: Create the Sprint Buff Effect**
+1. Create `GE_Sprint_Buff.tres`.
+   * **Policy:** `DURATION`
+   * **Duration:** `5.0`
+   * **Granted Tags:** Add `Status.Buff.Sprinting`.
+   * **Modifiers:** Add 1 element.
+     * `Attribute Name`: "movement_speed"
+     * `Operation`: `MULTIPLY`
+     * `Magnitude`: `1.5` (Increases speed by 50%).
+
+**Step 3: Create the Ability Script**
+Create `GA_Sprint.gd`:
+
+```gdscript
+class_name GA_Sprint
+extends GameplayAbility
+
+@export var sprint_buff_effect: GameplayEffect
+
+func _init() -> void:
+	ability_tag = "Ability.Agility.Sprint"
+	# Don't let them sprint if they are stunned or already sprinting!
+	activation_blocked_tags = ["Status.Debuff.Stunned", "Status.Buff.Sprinting"]
+
+func activate() -> bool:
+	execute_cue("Cue.Player.Dash")
+	
+	if sprint_buff_effect:
+		owner_asc.apply_gameplay_effect(sprint_buff_effect, owner_asc, ability_level)
+		
+	end_ability()
+	return true
+```
+*(Because GodotGAS `DURATION` effects automatically track their math, the ASC will perfectly remove the 50% speed increase and the `Status.Buff.Sprinting` tag after exactly 5 seconds!)*
+
+---
+
+### Example 3: "Shield Wall" (Toggle Stance)
+This demonstrates an `INFINITE` ability that stays active until the player turns it off. It grants massive defense but prevents the player from casting `Ability.Magic` spells while active.
+
+**Step 1: Register Tags**
+* `Ability.Defense.ShieldWall`
+* `Status.Stance.ShieldWall`
+
+**Step 2: Create the Stance Effect**
+1. Create `GE_ShieldWall_Stance.tres`.
+   * **Policy:** `INFINITE`
+   * **Granted Tags:** Add `Status.Stance.ShieldWall`.
+   * **Modifiers:** Add 1 element.
+     * `Attribute Name`: "armor"
+     * `Operation`: `ADD`
+     * `Magnitude`: `100.0`
+
+**Step 3: Create the Ability Script**
+Create `GA_ShieldWall.gd`:
+
+```gdscript
+class_name GA_ShieldWall
+extends GameplayAbility
+
+@export var stance_effect: GameplayEffect
+
+func _init() -> void:
+	ability_tag = "Ability.Defense.ShieldWall"
+	activation_blocked_tags = ["Status.Debuff.Stunned"]
+
+func activate() -> bool:
+	# If we are ALREADY in the stance, toggle it off!
+	if owner_asc.has_tag("Status.Stance.ShieldWall"):
+		owner_asc.remove_effects_with_tag("Status.Stance.ShieldWall")
+		execute_cue("Cue.Defense.ShieldDown")
+		end_ability()
+		return true
+
+	# Otherwise, toggle it on!
+	execute_cue("Cue.Defense.ShieldUp")
+	if stance_effect:
+		owner_asc.apply_gameplay_effect(stance_effect, owner_asc, ability_level)
+		
+		# Optional: Cancel any currently casting magic abilities!
+		owner_asc.cancel_abilities_with_tags(["Ability.Magic"])
+		
+	end_ability()
+	return true
+```
+
+**How to Block Magic Spells:**
+To complete the interaction, go back to your `GA_Heal` (or any magic spell) and update its blocked tags:
+```gdscript
+	# Inside GA_Heal.gd
+	activation_blocked_tags = ["Cooldown.Heal", "Status.Stance.ShieldWall"] 
+```
+Now, if the player attempts to call `GA_Heal.try_activate()` while Shield Wall is toggled on, the ASC gatekeeper will block it automatically.
+
