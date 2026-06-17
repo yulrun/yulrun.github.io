@@ -50,7 +50,6 @@ func pre_attribute_change(attribute_name: String, proposed_value: float) -> floa
 	return proposed_value
 ```
 
-### Chapter 3: Abilities & State
 # Chapter 3: Abilities & State Management
 
 Abilities (`GameplayAbility`) define the specific actions an entity can take. They are intrinsically linked to the ASC to ensure costs and cooldowns are respected.
