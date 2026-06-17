@@ -2,6 +2,9 @@
 title: GodotGAS
 nav_order: 3
 ---
+[GitHub Repository](https://github.com/yulrun/godot-gas)
+
+# GodotGAS v0.5.0 Documentation: Baseline Foundation
 
 # Chapter 1: The Godot-Native Architecture
 
