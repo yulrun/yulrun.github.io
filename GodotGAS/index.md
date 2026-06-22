@@ -6,7 +6,7 @@ has_children: true
 ---
 
 <div align="center">
-  <img src="./godot_gas_logo_small.png" alt="GodotGAS Logo">
+  <img src="./images/godot_gas_logo_small.png" alt="GodotGAS Logo">
 </div>
 
 # GodotGAS Framework
