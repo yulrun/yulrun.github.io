@@ -13,11 +13,16 @@ GodotGAS ensures that your abilities remain highly modular and entirely decouple
 
 ---
 
-## Granting Abilities
+## Granting & Binding Abilities
 
 Before an entity can cast an ability, it must be "granted" to their Ability System Component (ASC). This is typically done during the entity's initialization.
 
-When you grant an ability, the ASC holds it in memory, ready to be activated. You can grant abilities dynamically, allowing for systems like skill trees or equippable items that give temporary skills.
+When you grant an ability, the ASC holds it in memory, ready to be activated. However, to trigger it via a button press, you must bind it to an **Input ID** (an integer). This integer-based approach makes it incredibly easy to build dynamic hotbars or remappable skill slots using a standard `enum`.
+
+```gdscript
+# Example of binding a granted ability to an input slot (e.g., Slot 0)
+ability_system.bind_ability_to_input(fireball_ability, 0)
+```
 
 ---
 
@@ -29,24 +34,24 @@ GodotGAS completely decouples hardware input from the ability execution.
 
 ### How Input Routing Works:
 1. **The Controller Listens:** Your standard Godot character script (e.g., `CharacterBody3D`) listens for hardware inputs.
-2. **Routing to the ASC:** When a button is pressed, the character script does not call the ability directly. Instead, it alerts the ASC.
-3. **The ASC Triggers the Ability:** The ASC looks at its list of granted abilities, finds the one mapped to that specific input identifier, and executes it.
+2. **Routing to the ASC:** When a button is pressed, the character script does not call the ability directly. Instead, it passes the integer Input ID to the ASC.
+3. **The ASC Triggers the Ability:** The ASC looks at its list of active abilities, finds the one mapped to that specific Input ID, and triggers its internal pressed/released events.
 
 ```gdscript
 # Inside your Player Character script
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_pressed("combat_attack_1"):
-        # The hardware input is converted into a generic ASC command
-        ability_system.press_input("Attack1")
+        # The hardware input is converted into a generic ASC command for Slot 0
+        ability_system.ability_local_input_pressed(0)
         
     elif event.is_action_released("combat_attack_1"):
-        # Releasing is also routed, allowing for complex ability behaviors
-        ability_system.release_input("Attack1")
+        # Releasing is also routed, allowing for complex behaviors like charge-ups
+        ability_system.ability_local_input_released(0)
 ```
 
 ### Charge-ups & Channeling
-Because the ASC separately routes both `press` and `release` events, your `GameplayAbility` scripts can easily handle complex behaviors natively. You can write an ability that charges up over time and unleashes a massive payload strictly when the ASC notifies it that the input has been released.
+Because the ASC separately routes both `pressed` and `released` events, your `GameplayAbility` scripts can easily handle complex behaviors natively. You can write an ability that charges up over time and unleashes a massive payload strictly when the ASC notifies it that the input has been released.
 
 ---
 
