@@ -5,6 +5,10 @@ nav_order: 3
 has_children: true
 ---
 
+<div align="center">
+  <img src="./godot_gas_logo_small.png" alt="GodotGAS Logo">
+</div>
+
 # GodotGAS Framework
 
 **Current Version: v1.0.0 Release**
