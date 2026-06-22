@@ -12,6 +12,9 @@ GodotGAS includes a fully featured, custom editor dashboard integrated directly 
 ---
 
 ## The Tag Manager
+<div align="center">
+  <img src="./tag_manager.png" alt="Tag Manager Screenshot">
+</div>
 
 Gameplay Tags are the connective tissue of the GAS framework. They are hierarchical, optimized `StringName` values (e.g., `Status.Stunned`, `Event.Damage.Fire`) used to drive logic, cancel abilities, or trigger effects.
 
@@ -23,6 +26,9 @@ The Tag Manager tab provides a visual tree to manage your global `GameplayTagReg
 ---
 
 ## The Cue Manager
+<div align="center">
+  <img src="./cue_manager.png" alt="Tag Manager Screenshot">
+</div>
 
 Gameplay Cues handle everything visual and auditory—particle effects, sound effects, camera shakes, or UI damage numbers. In GodotGAS, Cues are completely decoupled from game logic and managed via an optimized **Variant-based Object Pool**.
 
@@ -34,6 +40,9 @@ Using the Cue Manager tab:
 ---
 
 ## The Attribute Set Generator
+<div align="center">
+  <img src="./attribute_set_manager.png" alt="Tag Manager Screenshot">
+</div>
 
 Writing stat definitions for every single RPG stat (Health, Mana, Strength, Armor) is tedious. GodotGAS solves this with a built-in Attribute Set Generator inspired by Unreal Engine's C++ macros.
 
