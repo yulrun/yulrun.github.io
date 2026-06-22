@@ -1,3 +1,4 @@
+<!-- 
 ---
 title: Home
 layout: home
@@ -7,3 +8,4 @@ permalink: /
 ---
 
 This website is currently under construction.
+-->
