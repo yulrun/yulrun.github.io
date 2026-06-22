@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 1. Introduction & Quick Start
-parent: GodotGAS Framework
+parent: GodotGAS - Addon
 nav_order: 4
 ---
 
