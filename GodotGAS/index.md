@@ -1,6 +1,6 @@
 ---
 layout: default
-title: GodotGAS Framework
+title: GodotGAS: Addon
 nav_order: 3
 has_children: true
 ---
