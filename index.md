@@ -1,11 +1,9 @@
-<!-- 
 ---
 title: Home
 layout: home
-nav_order: 1
 description: "Website under Construction"
 permalink: /
+nav_exclude: true
 ---
 
 This website is currently under construction.
--->
