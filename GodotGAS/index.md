@@ -9,11 +9,11 @@ has_children: true
   <img src="./images/banner.png" alt="GodotGAS Logo">
 </div>
 
+[**☕ Buy me a Coffee**](https://ko-fi.com/yulrundev)
+
 # GodotGAS Framework
 
 **Current Version:** [v1.0.0 Release Candidate](https://github.com/yulrun/godot-gas)
-
-[**☕ Buy me a Coffee**](https://ko-fi.com/yulrundev)
 
 Welcome to the official documentation for GodotGAS. 
 
