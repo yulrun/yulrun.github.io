@@ -26,7 +26,7 @@ The **Tag Manager** is where you define these tags.
 * **Regex Validation:** You cannot create invalid tags. The dashboard forces you to use the `Category.SubCategory.Name` format, ensuring your tags are clean and parseable.
 * **Auto-Generation:** When you add or delete a tag, the dashboard automatically updates `gameplay_tags.gd`. This allows you to reference tags in code securely (e.g., `GameplayTags.Status_Stunned`). 
 
-*[Placeholder: Screenshot of the Tag Manager panel showing a few expanded tag categories]*
+![Tag Manager Panel](./images/tag_manager.png)
 
 ### Using Tags in the Inspector
 Because tags are strictly registered, any script that exports a tag variable using the word `tag` (e.g., `@export var ability_tag: StringName`) will automatically receive a custom drop-down menu in the Godot Inspector! You will never have to type a tag manually in the inspector again.
@@ -41,7 +41,7 @@ The **Cue Manager** bridges the gap between your game's data and its presentatio
 * **How it works:** When a `GameplayEffect` is applied, it might tell the system to trigger the `Cue.SFX.Fireball.Impact` tag. The system looks in this registry, finds the mapped `.tscn` (perhaps an explosion particle with a boom sound), and spawns it using the Object Pool.
 * **Safety First:** The dashboard prevents you from mapping the same tag to multiple scenes, ensuring your audio/visual triggers are always 1:1.
 
-*[Placeholder: Screenshot of the Cue Manager panel showing a mapped Tag -> Scene list]*
+![Tag Manager Panel](./images/cue_manager.png)
 
 ---
 
@@ -54,7 +54,7 @@ Writing boilerplate code for RPG stats (Base Value, Current Value, clamping limi
 * **Icon Mapping:** Assign an editor icon to each stat so it's easily recognizable at a glance.
 * **Generation:** Click "Generate Script". GodotGAS reads your visual draft and writes a heavily documented, syntactically perfect `.gd` script extending `AttributeSet`. It automatically builds all the underlying `AttributeData` resources for you.
 
-*[Placeholder: Screenshot of the Attribute Sets panel showing the drafted stats and the Generate Script button]*
+![Tag Manager Panel](./images/attribute_set_manager.png)
 
 ### Where do they save?
 By default, the plugin saves generated Attribute Sets to `res://gas_attributes`. You can change this by clicking the **Settings Gear** in the Attribute panel and browsing for a new local directory in your project.
