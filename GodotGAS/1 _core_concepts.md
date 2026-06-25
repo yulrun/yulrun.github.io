@@ -37,7 +37,7 @@ Instead of storing variables like `var health = 100` directly on your player scr
 
 By keeping stats in an `AttributeSet`, the ASC can easily intercept mathematical changes, allowing you to clamp values (e.g., ensuring `Health` never drops below `0` or exceeds `Max Health`). 
 
-(./images/attribute_set_script.png)[Example Attribute Set Script]
+![Example Attribute Set Script](./images/attribute_set_script.png)
 
 ---
 
