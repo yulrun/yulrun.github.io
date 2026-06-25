@@ -63,3 +63,63 @@ func _activate_ability() -> bool:
 	
 	return true
 ```
+
+### Step 2: Configuring the Ability Node
+1. Create a new Node in your project and attach your `ga_fireball.gd` script. Save it as `ga_fireball.tscn`.
+2. Select the node and look at the Inspector. You will see the GodotGAS "Ability Rules" and "Ability Mechanics" categories.
+3. **Gatekeeping:** Assign a tag to `Activation Blocked Tags` (e.g., `Status.Stunned`). If the player is stunned, the ASC will automatically block the cast.
+4. **Costs:** Drag a `GameplayEffect` resource that subtracts Mana into the `Cost Effect` slot.
+
+### Step 3: Granting the Ability
+To give this ability to your player, you must grant it to their ASC. You can do this in the player's `_ready()` function:
+
+```gdscript
+@onready var asc = $AbilitySystemComponent
+var fireball_ability = preload("res://abilities/ga_fireball.tscn").instantiate()
+
+func _ready():
+    asc.grant_ability(fireball_ability)
+```
+
+---
+
+## 3. Building the Damage Effect
+
+When the Fireball hits an enemy, it shouldn't just subtract health directly. It needs to apply a `GameplayEffect`.
+
+### Step 1: Create the Resource
+1. Right-click in your FileSystem and select **New Resource -> GameplayEffect**.
+2. Save it as `ge_fireball_damage.tres`.
+
+### Step 2: Configure the Math
+1. Open the resource in the Inspector.
+2. Set **Duration Policy** to `Instant` (Damage happens immediately).
+3. Under **Modifiers**, add a new `GameplayEffectModifier`.
+4. Set the **Attribute Name** exactly as it appears in your Attribute Set (e.g., `health`).
+5. Set the **Operation** to `Add`.
+6. Set the **Magnitude** to `-50.0` (Negative numbers subtract!).
+
+*Note: For complex, scaling damage (e.g., `Damage = Attacker.Magic - Target.FireResist`), you would leave Modifiers empty and instead assign a custom `GameplayExecutionCalculation` script.*
+
+---
+
+## 4. The Projectile Payload (TargetData)
+
+How does the Fireball pass the `ge_fireball_damage.tres` to the Enemy's ASC? Through `TargetData`.
+
+Inside your Fireball projectile script, when an `Area2D` detects an overlap with an enemy:
+
+```gdscript
+func _on_body_entered(body: Node):
+	# 1. Package the hit data
+	var target_data = GameplayAbilityTargetData.new()
+	target_data.append_node(body)
+	
+	# 2. Tell the ability to apply the effect to whoever we hit!
+	# (owning_ability and damage_effect were passed during fireball.setup())
+	owning_ability.apply_effect_to_targets(damage_effect, target_data)
+	
+	queue_free()
+```
+
+The `apply_effect_to_targets` function is a built-in framework helper. It automatically grabs the enemy's ASC, wraps your `GameplayEffect` in a live `GameplayEffectSpec`, passes along who cast it, and executes the math safely.
