@@ -70,7 +70,9 @@ Because abilities are standalone nodes, they are highly modular. You can easily 
 One of the most powerful features of GodotGAS is how it handles the "narrative" of combat using Tags and Cues.
 
 ### Gameplay Tags
-Tags are strictly validated `StringNames` (e.g., `Event.Damage.Critical` or `Status.Silenced`) managed by a global registry. They are used for **Gatekeeping**. An ability can look at an ASC and say, *"I am blocked from activating if you have the `Status.Silenced` tag."* ### Gameplay Cues
+Tags are strictly validated `StringNames` (e.g., `Event.Damage.Critical` or `Status.Silenced`) managed by a global registry. They are used for **Gatekeeping**. An ability can look at an ASC and say, *"I am blocked from activating if you have the `Status.Silenced` tag."* 
+
+### Gameplay Cues
 Cues are the **Visuals and Audio**. In traditional game dev, your ability script might manually instantiate a particle system and play a sound. In GodotGAS, you decouple this completely. 
 
 Your ability simply tells the global `GameplayCueManager`: *"Execute the `Cue.SFX.Fireball.Impact` tag right here."* The manager looks up what `.tscn` is mapped to that tag, pulls it from a highly optimized **Object Pool**, and plays it. This means your mathematical combat logic never has to worry about loading, spawning, or deleting heavy visual nodes.
