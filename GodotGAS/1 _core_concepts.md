@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Core Concepts
+parent: GodotGAS - Addon
 nav_order: 1
 ---
 
