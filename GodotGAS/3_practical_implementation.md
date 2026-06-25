@@ -117,6 +117,8 @@ When the Fireball hits an enemy, it needs to apply a separate `GameplayEffect` t
 5. Set the **Operation** to `Add`.
 6. Set the **Magnitude** to `-50.0` (Negative numbers subtract!).
 
+*Note: For complex, scaling damage (e.g., `Damage = Attacker.Magic - Target.FireResist`), you would leave Modifiers empty and instead assign a custom `GameplayExecutionCalculation` script.*
+
 ---
 
 ## 5. The Projectile Payload (TargetData)
@@ -165,6 +167,7 @@ This is where **Execution Calculations (ExecCalcs)** come in.
 Create a new script named `calc_physical_damage.gd` that extends `GameplayExecutionCalculation`:
 
 ```gdscript
+class_name CalcPhysicalDamage
 extends GameplayExecutionCalculation
 
 func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
@@ -195,7 +198,7 @@ func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Di
 	
 	# Optional: Inject dynamic tags for the UI to read later!
 	if final_damage > 100:
-		spec.dynamic_tags.append(GameplayTags.Event_Combat_Critical)
+		spec.inject_tag(GameplayTags.Example_Event_Damage_Critical)
 	
 	return deltas
 ```
@@ -204,6 +207,6 @@ func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Di
 1. Go back to your `ge_fireball_damage.tres` file.
 2. Delete the simple Modifier you made in Step 4.
 3. Under the **Attribute Modifiers -> Executions** array, add a new element.
-4. Click the dropdown and select **New calc_physical_damage.gd**. 
+4. Click the dropdown and select **New CalcPhysicalDamage**. 
 
 Now, whenever the Fireball hits, GodotGAS will automatically route the payload into your custom math formula before touching the enemy's health!
