@@ -9,7 +9,7 @@ nav_order: 3
 
 Now that you understand the core concepts and have configured your tags and stats in the Editor Dashboard, it is time to build a working combat loop.
 
-This guide will walk you through the foundational steps of GodotGAS: Setting up a Character, creating a Fireball Ability, configuring its Costs/Cooldowns, and applying a Damage Effect.
+This guide will walk you through the foundational steps of GodotGAS: Setting up a Character, creating a Fireball Ability, configuring its Costs/Cooldowns, applying a Damage Effect, and writing complex Execution Calculations.
 
 ---
 
@@ -117,8 +117,6 @@ When the Fireball hits an enemy, it needs to apply a separate `GameplayEffect` t
 5. Set the **Operation** to `Add`.
 6. Set the **Magnitude** to `-50.0` (Negative numbers subtract!).
 
-*Note: For complex, scaling damage (e.g., `Damage = Attacker.Magic - Target.FireResist`), you would leave Modifiers empty and instead assign a custom `GameplayExecutionCalculation` script.*
-
 ---
 
 ## 5. The Projectile Payload (TargetData)
@@ -152,3 +150,60 @@ func _on_body_entered(body: Node) -> void:
 ```
 
 The `apply_effect_to_targets` function is a built-in framework helper. It automatically grabs the enemy's ASC, wraps your `GameplayEffect` in a live `GameplayEffectSpec`, securely passes along who cast it, and executes the math safely.
+
+---
+
+## 6. Advanced Math: Execution Calculations
+
+In Step 4, we used a simple Modifier to deal exactly 50 damage. But what if your game is a complex RPG where `Damage = (Attacker.AttackPower * 1.5) - Target.Armor`? 
+
+You cannot do this with static Modifiers because the Fireball needs to read stats from *two different characters* at the exact moment of impact. 
+
+This is where **Execution Calculations (ExecCalcs)** come in.
+
+### Writing an ExecCalc Script
+Create a new script named `calc_physical_damage.gd` that extends `GameplayExecutionCalculation`:
+
+```gdscript
+extends GameplayExecutionCalculation
+
+func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
+	var deltas: Dictionary = {}
+	
+	# 1. Get the Attacker's ASC from the Context payload
+	var instigator = spec.context.instigator
+	var source_asc = instigator.get_node_or_null("AbilitySystemComponent")
+	
+	if not source_asc or not target_asc:
+		return deltas
+		
+	# 2. Read the live attributes
+	var attack_stat = source_asc.get_attribute("attack")
+	var defense_stat = target_asc.get_attribute("defense")
+	
+	var attack_power = attack_stat.current_value if attack_stat else 0.0
+	var armor = defense_stat.current_value if defense_stat else 0.0
+	
+	# 3. Perform the dynamic math
+	var raw_damage = (attack_power * 1.5) - armor
+	
+	# Make sure we don't accidentally "heal" them if their armor is incredibly high!
+	var final_damage = maxf(1.0, raw_damage) 
+	
+	# 4. Return the exact attribute we want to modify, and the flat amount
+	deltas["health"] = -final_damage
+	
+	# Optional: Inject dynamic tags for the UI to read later!
+	if final_damage > 100:
+		spec.dynamic_tags.append(GameplayTags.Event_Combat_Critical)
+	
+	return deltas
+```
+
+### Applying the ExecCalc
+1. Go back to your `ge_fireball_damage.tres` file.
+2. Delete the simple Modifier you made in Step 4.
+3. Under the **Attribute Modifiers -> Executions** array, add a new element.
+4. Click the dropdown and select **New calc_physical_damage.gd**. 
+
+Now, whenever the Fireball hits, GodotGAS will automatically route the payload into your custom math formula before touching the enemy's health!
