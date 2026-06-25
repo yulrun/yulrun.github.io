@@ -57,4 +57,4 @@ Writing boilerplate code for RPG stats (Base Value, Current Value, clamping limi
 ![Tag Manager Panel](./images/attribute_set_manager.png)
 
 ### Where do they save?
-By default, the plugin saves generated Attribute Sets to `res://gas_attributes`. You can change this by clicking the **Settings Gear** in the Attribute panel and browsing for a new local directory in your project.
+By default, the plugin saves generated Attribute Sets to `res://gas_attributes`. You can change this by clicking the **Settings Tool Icon** in the Attribute panel next to the `Generate Script` button and browsing for a new local directory in your project.
