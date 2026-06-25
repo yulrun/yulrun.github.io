@@ -57,4 +57,4 @@ Writing boilerplate code for RPG stats (Base Value, Current Value, clamping limi
 *[Placeholder: Screenshot of the Attribute Sets panel showing the drafted stats and the Generate Script button]*
 
 ### Where do they save?
-By default, the plugin saves generated Attribute Sets to `res://addons/GodotGAS/examples/attribute_sets`. You can change this by clicking the **Settings Gear** in the Attribute panel and browsing for a new local directory in your project.
+By default, the plugin saves generated Attribute Sets to `res://gas_attributes`. You can change this by clicking the **Settings Gear** in the Attribute panel and browsing for a new local directory in your project.
