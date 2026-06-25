@@ -12,6 +12,7 @@ has_children: true
 # GodotGAS Framework
 
 [**Current Version: v1.0.0 Release Candidate**](https://github.com/yulrun/godot-gas)
+
 [**☕ Buy me a Cofee**](https://ko-fi.com/yulrundev)
 
 Welcome to the official documentation for GodotGAS. 
