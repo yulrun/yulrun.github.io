@@ -56,7 +56,7 @@ func _activate_ability() -> bool:
 	var fireball = projectile_scene.instantiate()
 	fireball.global_position = owner_asc.get_parent().global_position
 	
-	# Pass the damage data to the fireball so it knows what to do when it hits
+	# Pass the ability reference and the damage data down to the fireball
 	fireball.setup(self, damage_effect) 
 	
 	get_tree().current_scene.add_child(fireball)
@@ -123,21 +123,32 @@ When the Fireball hits an enemy, it needs to apply a separate `GameplayEffect` t
 
 ## 5. The Projectile Payload (TargetData)
 
-How does the Fireball pass the `ge_fireball_damage.tres` to the Enemy's ASC? Through `TargetData`.
+How does the physical fireball projectile actually pass the `ge_fireball_damage.tres` to the Enemy's ASC? It uses the framework's **TargetData** architecture.
 
-Inside your Fireball projectile script, when an `Area2D` detects an overlap with an enemy:
+Here is an example of what the script on your `FireballProjectile.tscn` (an `Area2D` or `Area3D`) should look like. Notice how it receives the data from the ability in the `setup()` function, and then packages the enemy it hits into a `GameplayAbilityTargetData` object:
 
 ```gdscript
-func _on_body_entered(body: Node):
-	# 1. Package the hit data
+extends Area2D
+
+var owning_ability: GameplayAbility
+var damage_effect: GameplayEffect
+
+# Called by ga_fireball.gd right before adding this projectile to the scene
+func setup(ability: GameplayAbility, effect: GameplayEffect) -> void:
+	owning_ability = ability
+	damage_effect = effect
+
+func _on_body_entered(body: Node) -> void:
+	# 1. Package the entity we just hit into a standard payload
 	var target_data = GameplayAbilityTargetData.new()
 	target_data.append_node(body)
 	
-	# 2. Tell the ability to apply the effect to whoever we hit!
-	# (owning_ability and damage_effect were passed during fireball.setup())
-	owning_ability.apply_effect_to_targets(damage_effect, target_data)
-	
+	# 2. Tell the original ability to apply the effect to whoever we hit!
+	if owning_ability and damage_effect:
+		owning_ability.apply_effect_to_targets(damage_effect, target_data)
+		
+	# 3. Destroy the projectile
 	queue_free()
 ```
 
-The `apply_effect_to_targets` function is a built-in framework helper. It automatically grabs the enemy's ASC, wraps your `GameplayEffect` in a live `GameplayEffectSpec`, passes along who cast it, and executes the math safely.
+The `apply_effect_to_targets` function is a built-in framework helper. It automatically grabs the enemy's ASC, wraps your `GameplayEffect` in a live `GameplayEffectSpec`, securely passes along who cast it, and executes the math safely.
