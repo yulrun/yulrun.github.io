@@ -1,7 +1,7 @@
 ---
 layout: default
 title: The Editor Dashboard
-parent: GodotGas - Addon
+parent: GodotGAS - Addon
 nav_order: 2
 ---
 
