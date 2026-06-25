@@ -9,7 +9,7 @@ nav_order: 3
 
 Now that you understand the core concepts and have configured your tags and stats in the Editor Dashboard, it is time to build a working combat loop.
 
-This guide will walk you through the three foundational steps of GodotGAS: Setting up a Character, creating a Fireball Ability, and applying a Damage Effect.
+This guide will walk you through the foundational steps of GodotGAS: Setting up a Character, creating a Fireball Ability, configuring its Costs/Cooldowns, and applying a Damage Effect.
 
 ---
 
@@ -46,7 +46,7 @@ extends GameplayAbility
 @export var damage_effect: GameplayEffect
 
 func _activate_ability() -> bool:
-	# 1. Pay the mana cost and trigger the cooldown
+	# 1. Pay the mana cost and trigger the cooldown automatically
 	commit_ability()
 	
 	# 2. Trigger the casting audio/visuals via the Cue Manager
@@ -64,14 +64,9 @@ func _activate_ability() -> bool:
 	return true
 ```
 
-### Step 2: Configuring the Ability Node
-1. Create a new Node in your project and attach your `ga_fireball.gd` script. Save it as `ga_fireball.tscn`.
-2. Select the node and look at the Inspector. You will see the GodotGAS "Ability Rules" and "Ability Mechanics" categories.
-3. **Gatekeeping:** Assign a tag to `Activation Blocked Tags` (e.g., `Status.Stunned`). If the player is stunned, the ASC will automatically block the cast.
-4. **Costs:** Drag a `GameplayEffect` resource that subtracts Mana into the `Cost Effect` slot.
-
-### Step 3: Granting the Ability
-To give this ability to your player, you must grant it to their ASC. You can do this in the player's `_ready()` function:
+### Step 2: Granting the Ability
+1. Create a new Node in your project, attach your `ga_fireball.gd` script, and save it as `ga_fireball.tscn`.
+2. To give this ability to your player, you must grant it to their ASC. You can do this in the player's `_ready()` function:
 
 ```gdscript
 @onready var asc = $AbilitySystemComponent
@@ -83,13 +78,36 @@ func _ready():
 
 ---
 
-## 3. Building the Damage Effect
+## 3. Configuring Costs and Cooldowns
 
-When the Fireball hits an enemy, it shouldn't just subtract health directly. It needs to apply a `GameplayEffect`.
+In GodotGAS, you do not write hardcoded timers for cooldowns, nor do you manually subtract mana in your scripts. Both of these mechanics are driven purely by `GameplayEffect` resources. When your script calls `commit_ability()`, the ASC automatically applies these effects to the caster.
+
+### Creating the Cost Effect
+1. Create a new `GameplayEffect` resource and name it `ge_fireball_cost.tres`.
+2. Set the **Duration Policy** to `Instant`.
+3. Under **Modifiers**, add a new modifier. 
+4. Set the **Attribute Name** to `mana` (or whichever resource your spell uses).
+5. Set the **Operation** to `Add`, and the **Magnitude** to `-20.0`.
+   * *How it works:* Before casting, the ASC automatically projects this math. If subtracting 20 drops the player's mana below 0, the cast is blocked and an `ability_activation_failed` signal is sent to your UI!
+
+### Creating the Cooldown Effect
+1. Create another `GameplayEffect` resource and name it `ge_fireball_cooldown.tres`.
+2. Set the **Duration Policy** to `Duration`.
+3. Set the **Duration** to `5.0` (seconds).
+4. Under **State Management -> Granted Tags**, add a tag to represent the cooldown, such as `State.Cooldown.Fireball`.
+   * *How it works:* The ASC applies this effect and grants the tag for exactly 5 seconds. If the player tries to cast Fireball again, the framework sees the `State.Cooldown.Fireball` tag and blocks the cast until the 5 seconds are up.
+
+### Linking them to the Ability
+Select your `ga_fireball.tscn` node. In the Inspector, under **Ability Mechanics**, drag and drop your `ge_fireball_cost.tres` into the `Cost Effect` slot, and `ge_fireball_cooldown.tres` into the `Cooldown Effect` slot.
+
+---
+
+## 4. Building the Damage Effect
+
+When the Fireball hits an enemy, it needs to apply a separate `GameplayEffect` to deal damage.
 
 ### Step 1: Create the Resource
-1. Right-click in your FileSystem and select **New Resource -> GameplayEffect**.
-2. Save it as `ge_fireball_damage.tres`.
+1. Create a new `GameplayEffect` resource and save it as `ge_fireball_damage.tres`.
 
 ### Step 2: Configure the Math
 1. Open the resource in the Inspector.
@@ -103,7 +121,7 @@ When the Fireball hits an enemy, it shouldn't just subtract health directly. It 
 
 ---
 
-## 4. The Projectile Payload (TargetData)
+## 5. The Projectile Payload (TargetData)
 
 How does the Fireball pass the `ge_fireball_damage.tres` to the Enemy's ASC? Through `TargetData`.
 
