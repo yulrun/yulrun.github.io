@@ -1,7 +1,7 @@
 ---
 layout: default
 title: GodotGAS - Addon
-nav_order: 3
+nav_order: 1
 has_children: true
 ---
 
@@ -13,7 +13,7 @@ has_children: true
 
 [**Current Version: v1.0.0 Release Candidate**](https://github.com/yulrun/godot-gas)
 
-[**☕ Buy me a Cofee**](https://ko-fi.com/yulrundev)
+[**☕ Buy me a Coffee**](https://ko-fi.com/yulrundev)
 
 Welcome to the official documentation for GodotGAS. 
 
