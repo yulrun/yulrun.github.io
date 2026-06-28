@@ -39,7 +39,7 @@ Abilities are discrete Nodes that handle input, animation, and logic.
 ### Step 1: The Script
 Create a new script called `ga_fireball.gd` and have it extend `GameplayAbility`.
 
-```gdscript
+`gdscript
 extends GameplayAbility
 
 @export var projectile_scene: PackedScene
@@ -62,19 +62,19 @@ func _activate_ability() -> bool:
 	get_tree().current_scene.add_child(fireball)
 	
 	return true
-```
+`
 
 ### Step 2: Granting the Ability
 1. Create a new Node in your project, attach your `ga_fireball.gd` script, and save it as `ga_fireball.tscn`.
 2. To give this ability to your player, you must grant it to their ASC. You can do this in the player's `_ready()` function:
 
-```gdscript
+`gdscript
 @onready var asc = $AbilitySystemComponent
 var fireball_ability = preload("res://abilities/ga_fireball.tscn").instantiate()
 
 func _ready():
     asc.grant_ability(fireball_ability)
-```
+`
 
 ---
 
@@ -88,14 +88,16 @@ In GodotGAS, you do not write hardcoded timers for cooldowns, nor do you manuall
 3. Under **Modifiers**, add a new modifier. 
 4. Set the **Attribute Name** to `mana` (or whichever resource your spell uses).
 5. Set the **Operation** to `Add`, and the **Magnitude** to `-20.0`.
-   * *How it works:* Before casting, the ASC automatically projects this math. If subtracting 20 drops the player's mana below 0, the cast is blocked and an `ability_activation_failed` signal is sent to your UI!
+   
+### Predictive Resource Costs
+The ASC actively predicts dynamic resource costs. If your spell's mana cost is dynamically modified by an Execution Calculation (e.g., a "Blood Magic" passive that doubles mana costs), the `can_afford_cost()` function generates a mock Spec, runs the math predictively, and correctly blocks the cast if the mutated cost exceeds the player's current mana.
 
 ### Creating the Cooldown Effect
 1. Create another `GameplayEffect` resource and name it `ge_fireball_cooldown.tres`.
 2. Set the **Duration Policy** to `Duration`.
 3. Set the **Duration** to `5.0` (seconds).
 4. Under **State Management -> Granted Tags**, add a tag to represent the cooldown, such as `State.Cooldown.Fireball`.
-   * *How it works:* The ASC applies this effect and grants the tag for exactly 5 seconds. If the player tries to cast Fireball again, the framework sees the `State.Cooldown.Fireball` tag and blocks the cast until the 5 seconds are up.
+   * *How it works:* The ASC applies this effect and grants the tag for exactly 5 seconds. If the player tries to cast Fireball again, the framework sees the tag and blocks the cast until the 5 seconds are up.
 
 ### Linking them to the Ability
 Select your `ga_fireball.tscn` node. In the Inspector, under **Ability Mechanics**, drag and drop your `ge_fireball_cost.tres` into the `Cost Effect` slot, and `ge_fireball_cooldown.tres` into the `Cooldown Effect` slot.
@@ -117,8 +119,6 @@ When the Fireball hits an enemy, it needs to apply a separate `GameplayEffect` t
 5. Set the **Operation** to `Add`.
 6. Set the **Magnitude** to `-50.0` (Negative numbers subtract!).
 
-*Note: For complex, scaling damage (e.g., `Damage = Attacker.Magic - Target.FireResist`), you would leave Modifiers empty and instead assign a custom `GameplayExecutionCalculation` script.*
-
 ---
 
 ## 5. The Projectile Payload (TargetData)
@@ -127,7 +127,7 @@ How does the physical fireball projectile actually pass the `ge_fireball_damage.
 
 Here is an example of what the script on your `FireballProjectile.tscn` (an `Area2D` or `Area3D`) should look like. Notice how it receives the data from the ability in the `setup()` function, and then packages the enemy it hits into a `GameplayAbilityTargetData` object:
 
-```gdscript
+`gdscript
 extends Area2D
 
 var owning_ability: GameplayAbility
@@ -149,64 +149,62 @@ func _on_body_entered(body: Node) -> void:
 		
 	# 3. Destroy the projectile
 	queue_free()
-```
-
-The `apply_effect_to_targets` function is a built-in framework helper. It automatically grabs the enemy's ASC, wraps your `GameplayEffect` in a live `GameplayEffectSpec`, securely passes along who cast it, and executes the math safely.
+`
 
 ---
 
 ## 6. Advanced Math: Execution Calculations
 
-In Step 4, we used a simple Modifier to deal exactly 50 damage. But what if your game is a complex RPG where `Damage = (Attacker.AttackPower * 1.5) - Target.Armor`? 
+While static Modifiers are great for basic logic, complex games require dynamic formulas (e.g., `Damage = (Attack * 1.5) - Armor`). Furthermore, you might want to dynamically alter a spell's cooldown based on a "Haste" stat.
 
-You cannot do this with static Modifiers because the Fireball needs to read stats from *two different characters* at the exact moment of impact. 
+This is where **Execution Calculations (ExecCalcs)** come in. When an ExecCalc runs, it intercepts the live `GameplayEffectSpec` *before* any math is applied. You have two primary workflows:
 
-This is where **Execution Calculations (ExecCalcs)** come in.
+### Workflow A: The Mutator (Changing Rules)
+You can directly alter the blueprint of the effect by mutating the `GameplayEffectSpec` payload. This allows you to dynamically scale cooldown durations, tick periods, or base modifier magnitudes. You return an empty dictionary since you are just tweaking the Spec's rules.
 
-### Writing an ExecCalc Script
-Create a new script named `calc_physical_damage.gd` that extends `GameplayExecutionCalculation`:
-
-```gdscript
-class_name CalcPhysicalDamage
-extends GameplayExecutionCalculation
+`gdscript
+class_name CalcCooldownOverride extends GameplayExecutionCalculation
 
 func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
-	var deltas: Dictionary = {}
+	# Example: Cooldown Reduction based on Haste
+	var haste_stat = target_asc.get_attribute("haste")
+	var haste = haste_stat.current_value if haste_stat else 0.0
 	
-	# 1. Get the Attacker's ASC from the Context payload
+	# Reduce duration by 1% for every point of Haste
+	spec.duration *= maxf(0.1, 1.0 - (haste / 100.0))
+	
+	return {}
+`
+
+### Workflow B: The Calculator (Combat Math)
+If you want to perform cross-entity math, you use the Calculator workflow. Instead of mutating the spec, you calculate the math and return the flat numerical damage as a Dictionary. The ASC automatically merges this into the final damage pool.
+
+`gdscript
+class_name CalcPhysicalDamage extends GameplayExecutionCalculation
+
+func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
 	var instigator = spec.context.instigator
 	var source_asc = instigator.get_node_or_null("AbilitySystemComponent")
 	
 	if not source_asc or not target_asc:
-		return deltas
+		return {}
 		
-	# 2. Read the live attributes
-	var attack_stat = source_asc.get_attribute("attack")
-	var defense_stat = target_asc.get_attribute("defense")
+	var attack_power = source_asc.get_attribute("attack").current_value
+	var armor = target_asc.get_attribute("defence").current_value
 	
-	var attack_power = attack_stat.current_value if attack_stat else 0.0
-	var armor = defense_stat.current_value if defense_stat else 0.0
+	var final_damage = maxf(1.0, (attack_power * 1.5) - armor) 
 	
-	# 3. Perform the dynamic math
-	var raw_damage = (attack_power * 1.5) - armor
-	
-	# Make sure we don't accidentally "heal" them if their armor is incredibly high!
-	var final_damage = maxf(1.0, raw_damage) 
-	
-	# 4. Return the exact attribute we want to modify, and the flat amount
-	deltas["health"] = -final_damage
-	
-	# Optional: Inject dynamic tags for the UI to read later!
+	# Inject dynamic tags for the UI to read later!
 	if final_damage > 100:
 		spec.inject_tag(GameplayTags.Example_Event_Damage_Critical)
 	
-	return deltas
-```
+	# Return the exact attribute we want to modify, and the flat amount
+	return {"health": -final_damage}
+`
 
 ### Applying the ExecCalc
-1. Go back to your `ge_fireball_damage.tres` file.
-2. Delete the simple Modifier you made in Step 4.
-3. Under the **Attribute Modifiers -> Executions** array, add a new element.
-4. Click the dropdown and select **New CalcPhysicalDamage**. 
+1. Go back to your `GameplayEffect` resource file.
+2. Under the **Attribute Modifiers -> Executions** array, add a new element.
+3. Click the dropdown and select **New CalcPhysicalDamage** (or whatever you named your script). 
 
-Now, whenever the Fireball hits, GodotGAS will automatically route the payload into your custom math formula before touching the enemy's health!
+Now, whenever the effect is applied, GodotGAS will automatically route the payload into your custom math script before touching the enemy's attributes!
