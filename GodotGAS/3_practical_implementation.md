@@ -39,7 +39,7 @@ Abilities are discrete Nodes that handle input, animation, and logic.
 ### Step 1: The Script
 Create a new script called `ga_fireball.gd` and have it extend `GameplayAbility`.
 
-`gdscript
+```gdscript
 extends GameplayAbility
 
 @export var projectile_scene: PackedScene
@@ -62,19 +62,19 @@ func _activate_ability() -> bool:
 	get_tree().current_scene.add_child(fireball)
 	
 	return true
-`
+```
 
 ### Step 2: Granting the Ability
 1. Create a new Node in your project, attach your `ga_fireball.gd` script, and save it as `ga_fireball.tscn`.
 2. To give this ability to your player, you must grant it to their ASC. You can do this in the player's `_ready()` function:
 
-`gdscript
+```gdscript
 @onready var asc = $AbilitySystemComponent
 var fireball_ability = preload("res://abilities/ga_fireball.tscn").instantiate()
 
 func _ready():
     asc.grant_ability(fireball_ability)
-`
+```
 
 ---
 
@@ -127,7 +127,7 @@ How does the physical fireball projectile actually pass the `ge_fireball_damage.
 
 Here is an example of what the script on your `FireballProjectile.tscn` (an `Area2D` or `Area3D`) should look like. Notice how it receives the data from the ability in the `setup()` function, and then packages the enemy it hits into a `GameplayAbilityTargetData` object:
 
-`gdscript
+```gdscript
 extends Area2D
 
 var owning_ability: GameplayAbility
@@ -149,7 +149,7 @@ func _on_body_entered(body: Node) -> void:
 		
 	# 3. Destroy the projectile
 	queue_free()
-`
+```
 
 ---
 
@@ -162,7 +162,7 @@ This is where **Execution Calculations (ExecCalcs)** come in. When an ExecCalc r
 ### Workflow A: The Mutator (Changing Rules)
 You can directly alter the blueprint of the effect by mutating the `GameplayEffectSpec` payload. This allows you to dynamically scale cooldown durations, tick periods, or base modifier magnitudes. You return an empty dictionary since you are just tweaking the Spec's rules.
 
-`gdscript
+```gdscript
 class_name CalcCooldownOverride extends GameplayExecutionCalculation
 
 func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
@@ -174,12 +174,12 @@ func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Di
 	spec.duration *= maxf(0.1, 1.0 - (haste / 100.0))
 	
 	return {}
-`
+```
 
 ### Workflow B: The Calculator (Combat Math)
 If you want to perform cross-entity math, you use the Calculator workflow. Instead of mutating the spec, you calculate the math and return the flat numerical damage as a Dictionary. The ASC automatically merges this into the final damage pool.
 
-`gdscript
+```gdscript
 class_name CalcPhysicalDamage extends GameplayExecutionCalculation
 
 func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Dictionary:
@@ -200,7 +200,7 @@ func execute(spec: GameplayEffectSpec, target_asc: AbilitySystemComponent) -> Di
 	
 	# Return the exact attribute we want to modify, and the flat amount
 	return {"health": -final_damage}
-`
+```
 
 ### Applying the ExecCalc
 1. Go back to your `GameplayEffect` resource file.
