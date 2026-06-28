@@ -93,8 +93,8 @@ func _on_buff_added(active_effect: ActiveGameplayEffect) -> void:
     # You can read the resource name, or custom icon exports you add to your GameplayEffects!
     print("UI: Spawn a new icon for ", effect_def.resource_name)
     
-    # You can also read the duration to start a UI sweep
-    var duration = effect_def.duration
+    # Read the true, mathematically evaluated duration from the Spec to start a UI sweep
+    var duration = active_effect.spec.duration
 
 func _on_buff_removed(active_effect: ActiveGameplayEffect) -> void:
     print("UI: Remove the icon for ", active_effect.get_effect_def().resource_name)
