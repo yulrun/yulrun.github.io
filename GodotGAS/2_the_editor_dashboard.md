@@ -54,6 +54,14 @@ Writing boilerplate code for RPG stats (Base Value, Current Value, clamping limi
 * **Icon Mapping:** Assign an editor icon to each stat so it's easily recognizable at a glance.
 * **Generation:** Click "Generate Script". GodotGAS reads your visual draft and writes a heavily documented, syntactically perfect `.gd` script extending `AttributeSet`. It automatically builds all the underlying `AttributeData` resources for you.
 
+### Auto-Generated Clamping (Min & Max Bounds)
+When you click **Generate Script**, the tool looks for specific naming conventions to automatically write complex clamping logic for you!
+
+If you create a generic stat (like `health`) and a corresponding boundary stat using the `max_` prefix (`max_health`) or `min_` prefix (`min_health`), the generator automatically wires them together:
+
+1. **The Bouncer (`pre_attribute_change`):** Incoming damage or healing is automatically clamped so `health` never drops below `min_health` (or `0` by default) and never exceeds `max_health`. This allows you to easily create "Undying" or "Last Stand" buffs by temporarily raising `min_health` to `1`!
+2. **The Goalpost Shifter (`post_attribute_change`):** If a debuff temporarily reduces your `max_health` from 100 to 50, the system reacts automatically. It checks if your current `health` is now illegally high, and if so, it safely damages you down to the new maximum limit.
+
 ![Tag Manager Panel](./images/attribute_set_manager.png)
 
 ### Where do they save?
