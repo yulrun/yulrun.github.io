@@ -6,4 +6,4 @@ permalink: /
 nav_exclude: true
 ---
 
-This website is currently under construction.
+This website is currently under construction. Visit the **[Discord](https://discord.gg/bW5pvcdK5j)**!
