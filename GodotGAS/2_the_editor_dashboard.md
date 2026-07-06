@@ -5,7 +5,7 @@ parent: GodotGAS - Addon
 nav_order: 2
 ---
 
-# The GodotGAS Dashboard
+# The GodotGAS Dashboard 
 
 GodotGAS is designed to be a deeply data-driven framework. To prevent typos and broken references, you should rarely have to type a tag or stat name manually into a string field. 
 
