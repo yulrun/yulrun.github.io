@@ -3,6 +3,7 @@ title: Home
 layout: home
 description: "Website under Construction"
 permalink: /
+nav_order: 0
 nav_exclude: false
 ---
 
