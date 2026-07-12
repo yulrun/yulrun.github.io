@@ -1,0 +1,21 @@
+<header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+
+    <nav class="site-nav">
+      <div class="trigger">
+
+        <!-- 1. Your custom non-page link injected right at the end -->
+        <a class="page-link" href="#" target="_blank" rel="noopener noreferrer">Discord</a>
+        
+        <!-- 2. The original loop that automatically pulls your pages -->
+        {% for my_page in site.pages %}
+          {% if my_page.title %}
+            <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </nav>
+  </div>
+</header>
