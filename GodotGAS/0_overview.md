@@ -34,8 +34,4 @@ With the v1.0.0 release, the foundational architecture, Editor Dashboard, and co
 ---
 
 *Use the navigation menu to explore the framework, learn how to install GodotGAS, set up your first Ability System Component, and master the data-driven architecture.*
-
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-No file chosen
-Attach files by dragging & dropping, selecting or pasting them.
  
