@@ -1,0 +1,19 @@
+// 1. Target the specific heading-only text in the navigation sidebar
+.nav-list-heading:has(button[aria-label*="YulRun Studio"]) button {
+    color: #FF5733 !important; // Your custom hex text color here
+    display: inline-flex;
+    align-items: center;
+}
+
+// 2. Inject your studio icon right before the text
+.nav-list-heading:has(button[aria-label*="YulRun Studio"]) button::before {
+    content: "";
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    margin-right: 6px;
+    background-image: url('/assets/images/icon_studio.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
