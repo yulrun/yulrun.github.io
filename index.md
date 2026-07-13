@@ -20,9 +20,9 @@ If you're wondering about the name, it actually comes from an old MMORPG joke. I
 I build a mix of games, open-source tools, and random tech projects. To keep things organized around here, I’ve broken the site down into three color-coded divisions. You'll spot the colors on the logos as you explore:
 
 <div align="center" style="margin: 20px 0;">
-  <img src="/assets/images/yulrun-labs-logo.png" alt="Labs" width="60" style="margin: 0 15px;">
-  <img src="/assets/images/yulrun-studio-logo.png" alt="Studio" width="60" style="margin: 0 15px;">
-  <img src="/assets/images/yulrun-forge-logo.png" alt="Forge" width="60" style="margin: 0 15px;">
+  <img src="/assets/images/yulrun-labs-logo.png" alt="Labs" width="150" style="margin: 0 15px;">
+  <img src="/assets/images/yulrun-studio-logo.png" alt="Studio" width="150" style="margin: 0 15px;">
+  <img src="/assets/images/yulrun-forge-logo.png" alt="Forge" width="150" style="margin: 0 15px;">
 </div>
 
 *   **Cyan (Labs):** This is where I share my developer tools, frameworks, and open-source Godot Engine addons.
