@@ -16,8 +16,6 @@ heading_only: false
 
 **Current Version:** [v1.0.0](https://github.com/yulrun/godot-data-tables-addon)
 
-This plugin brings Unreal Engine's renowned "DataTable" paradigm directly into Godot 4.7+. Say goodbye to relying on generic JSON/CSV files that break static typing and lack native engine integration. Godot DataTables provides a highly scalable, visual workflow for managing complex datasets—all written natively in GDScript.
-
 <details open markdown="block">
   <summary>
     Table of contents
@@ -26,6 +24,9 @@ This plugin brings Unreal Engine's renowned "DataTable" paradigm directly into G
 1. TOC
 {:toc}
 </details>
+
+
+This plugin brings Unreal Engine's renowned "DataTable" paradigm directly into Godot 4.7+. Say goodbye to relying on generic JSON/CSV files that break static typing and lack native engine integration. Godot DataTables provides a highly scalable, visual workflow for managing complex datasets—all written natively in GDScript.
 
 ## Core Features in v1.0.0
 
