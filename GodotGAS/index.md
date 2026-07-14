@@ -7,6 +7,7 @@ parent: "<img src='/assets/images/icon_labs.png' style='height: 21px; vertical-a
 has_children: true
 heading_only: false
 ---
+{: .no_toc }
 
 <div align="center">
   <img src="../assets/images/godot-gas-medium.png" alt="GodotGAS Logo">
@@ -19,6 +20,15 @@ heading_only: false
 Welcome to the official documentation for GodotGAS. 
 
 GodotGAS is a robust, data-driven framework written entirely in GDScript for Godot 4.6+. Heavily inspired by Unreal Engine's renowned Gameplay Ability System (GAS), it provides a highly scalable architecture for managing the complex interactions between abilities, attributes, tags, and status effects in your Godot projects.
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 ## What is it for?
 
