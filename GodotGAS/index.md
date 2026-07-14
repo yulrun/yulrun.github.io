@@ -17,10 +17,6 @@ heading_only: false
 
 **Current Version:** [v1.0.0 Release Candidate](https://github.com/yulrun/godot-gas)
 
-Welcome to the official documentation for GodotGAS. 
-
-GodotGAS is a robust, data-driven framework written entirely in GDScript for Godot 4.6+. Heavily inspired by Unreal Engine's renowned Gameplay Ability System (GAS), it provides a highly scalable architecture for managing the complex interactions between abilities, attributes, tags, and status effects in your Godot projects.
-
 <details open markdown="block">
   <summary>
     Table of contents
@@ -29,6 +25,10 @@ GodotGAS is a robust, data-driven framework written entirely in GDScript for God
 1. TOC
 {:toc}
 </details>
+
+Welcome to the official documentation for GodotGAS. 
+
+GodotGAS is a robust, data-driven framework written entirely in GDScript for Godot 4.6+. Heavily inspired by Unreal Engine's renowned Gameplay Ability System (GAS), it provides a highly scalable architecture for managing the complex interactions between abilities, attributes, tags, and status effects in your Godot projects.
 
 ## What is it for?
 
