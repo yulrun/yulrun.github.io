@@ -13,6 +13,10 @@ nav_external_links:
     url: https://discord.gg/bW5pvcdK5j
     hide_icon: false # set to true to hide the external link icon - defaults to false
     opens_in_new_tab: false # set to true to open this link in a new tab - defaults to false
+  - title: ☕ Support Me
+    url: https://ko-fi.com/yulrundev
+    hide_icon: true
+    opens_in_new_tab: true
 
 # External Plugins & Themes
 plugins:
