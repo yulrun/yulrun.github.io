@@ -12,8 +12,6 @@ heading_only: false
   <img src="../assets/images/godot-gas-medium.png" alt="GodotGAS Logo">
 </div>
 
-[**☕ Buy me a Coffee**](https://ko-fi.com/yulrundev)
-
 # GodotGAS Framework
 
 **Current Version:** [v1.0.0 Release Candidate](https://github.com/yulrun/godot-gas)
