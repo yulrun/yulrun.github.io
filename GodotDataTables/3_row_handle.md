@@ -42,7 +42,7 @@ If you delete or rename a row in the DataTable editor, the Inspector will instan
 
 Once you have a handle, extracting data is highly streamlined.
 
-### `get_row()`
+### get_row()
 Returns the exact instantiated `DataStructure` object for the row. This provides perfect IDE autocomplete for all your custom fields.
 
 ```gdscript
@@ -51,7 +51,7 @@ if weapon_data:
     print("Damage: ", weapon_data.base_damage)
 ```
 
-### `get_value(property_name: StringName, array_index: int = -1)`
+### get_value(property_name: StringName, array_index: int = -1)
 Safely fetches a specific value. If the property is an Array (like a leveling curve) and you provide an `array_index`, the handle will safely extract that specific element, clamping to the max size if you exceed the array bounds.
 
 ```gdscript
@@ -59,7 +59,7 @@ Safely fetches a specific value. If the property is an Array (like a leveling cu
 var dmg = spell_handle.get_value("damage_curve", 4)
 ```
 
-### `get_row_as_dictionary(numeric_only: bool = false, array_index: int = -1)`
+### get_row_as_dictionary(numeric_only: bool = false, array_index: int = -1)
 The ultimate integration tool. This unpacks the entire strongly-typed row into a standard Godot Dictionary.
 
 If `numeric_only` is set to `true`, the handle strips out all Strings, Booleans, and Objects, strictly returning floats. This is the **perfect bridge** for feeding stat overrides into standalone gameplay frameworks (like GodotGAS) without creating hard dependencies.
