@@ -8,7 +8,7 @@ nav_exclude: false
 ---
 
 <div align="center">
-  <img src="/assets/images/yulrun_logo_pro_nodev.png" alt="YulRun Logo" width="400">
+  <img src="/assets/images/yulrun_logo_pro.png" alt="YulRun Logo" width="400">
 </div>
 
 Hey there, welcome to YulRun! 
