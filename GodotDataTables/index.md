@@ -6,6 +6,7 @@ parent: "<img src='/assets/images/icon_labs.png' style='height: 21px; vertical-a
 has_children: true
 heading_only: false
 ---
+{: .no_toc }
 
 <div align="center">
   <img src="../assets/images/godot-datatables-medium.png" alt="Godot DataTables Logo">
@@ -16,6 +17,15 @@ heading_only: false
 **Current Version:** [v1.0.0](https://github.com/yulrun/godot-data-tables-addon)
 
 This plugin brings Unreal Engine's renowned "DataTable" paradigm directly into Godot 4.7+. Say goodbye to relying on generic JSON/CSV files that break static typing and lack native engine integration. Godot DataTables provides a highly scalable, visual workflow for managing complex datasets—all written natively in GDScript.
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 ## Core Features in v1.0.0
 
