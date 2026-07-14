@@ -15,7 +15,7 @@ heading_only: false
 
 # GodotGAS Framework
 
-**Current Version:** [v1.0.0 Release Candidate](https://github.com/yulrun/godot-gas)
+**Current Version:** [v1.0.2](https://github.com/yulrun/godot-gas)
 
 <details open markdown="block">
   <summary>
