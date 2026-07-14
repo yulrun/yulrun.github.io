@@ -9,7 +9,7 @@ heading_only: false
 ---
 
 <div align="center">
-  <img src="./images/godot-gas-medium.png" alt="GodotGAS Logo">
+  <img src="./assets/images/godot-gas-medium.png" alt="GodotGAS Logo">
 </div>
 
 [**☕ Buy me a Coffee**](https://ko-fi.com/yulrundev)
