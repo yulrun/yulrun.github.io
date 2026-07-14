@@ -25,8 +25,8 @@ I build a mix of games, open-source tools, and random tech projects. To keep thi
   <img src="/assets/images/yulrun-forge-logo.png" alt="Forge" width="150" style="margin: 0 15px;">
 </div>
 
-*   **Cyan (Labs):** This is where I share my developer tools, frameworks, and open-source Godot Engine addons.
-*   **Red (Studio):** This is the home for my actual game development projects and playable indie titles.
+*   **Blue (Labs):** This is where I share my developer tools, frameworks, and open-source Godot Engine addons.
+*   **Crimson (Studio):** This is the home for my actual game development projects and playable indie titles.
 *   **Gold (Forge):** This is my personal tech sandbox for R&D, experimentation, and trying out new software ideas.
 
 Feel free to look around and check out whatever division catches your eye!
